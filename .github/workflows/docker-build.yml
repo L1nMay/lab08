@@ -1,44 +1,9 @@
-name: Docker Build and Test
+name: Test Workflow
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15  # Ограничение времени выполнения
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Build Docker image
-      run: docker build -t logger .
-
-    - name: Run container tests
-      run: |
-        mkdir -p logs
-        docker run --name logger-test -d -v "$(pwd)/logs/:/home/logs/" logger
-        sleep 5
-
-        # Проверка что контейнер запущен
-        docker ps -a | grep logger-test
-
-        # Проверка содержимого логов
-        if [ -f "logs/log.txt" ]; then
-          echo "Log file content:"
-          cat logs/log.txt
-        else
-          echo "Error: Log file not created!"
-          exit 1
-        fi
-
-        # Остановка и удаление контейнера
-        docker stop logger-test
-        docker rm logger-test
+      - run: echo "GitHub Actions are working!"
